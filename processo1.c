@@ -10,7 +10,6 @@ mqd_t queue;
 
 void *receive_msg(void *msg){
   int *a = (int*)msg;
-
   while(1){
     if((mq_receive (queue, (void*) &a, sizeof(a), 0)) > 0){
       perror("mq_open");
@@ -25,6 +24,8 @@ int main(){
   int *msg;
   struct mq_attr attr;
   pthread_t thread_id;
+  /*aguarda finalização do thread identificado por thread_id. O retorno é passado pelo ponteiro thread_res*/
+  void * thread_res;
 
   msg = (int*)malloc(sizeof(int));
 
@@ -38,4 +39,5 @@ int main(){
   }
 
   pthread_create(&thread_id, NULL, receive_msg, (void*) msg);
+  pthread_join (thread_id, &thread_res);
 }
