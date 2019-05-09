@@ -9,13 +9,15 @@
 mqd_t queue;
 
 void *receive_msg(void *msg){
-  int *a = (int*)msg;
+  int *msg_received = (int*)msg;
+
   while(1){
-    if((mq_receive (queue, (void*) &a, sizeof(a), 0)) > 0){
+    if((mq_receive (queue, (void*) &msg_received, sizeof(msg_received), 0)) < 0){
       perror("mq_open");
       exit(1);
     }
-    printf("Received msg: %d \n", *a);
+
+    printf("Received msg: %d \n", msg_received);
     pthread_exit(0);
   }
 }
