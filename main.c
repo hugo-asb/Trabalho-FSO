@@ -18,9 +18,9 @@ int main(){
     char destination[10];
 
    
-    printf("digite o nome da fila\n");
+    printf("Nome da fila a ser criada\n");
     scanf("%[^\n]", queue_name);
-    printf("digite o a ser recebido\n");
+    printf("Nome da fila que ira se comunicar\n");
     scanf(" %[^\n]", destination);
     msg->destination = destination; 
   
