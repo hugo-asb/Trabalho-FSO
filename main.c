@@ -16,15 +16,14 @@ int main(){
     msg = (msg_params_t*)malloc(sizeof(msg_params_t));
     char queue_name[10];
     char destination[10];
-
-   
-    printf("Nome da fila a ser criada\n");
-    scanf("%[^\n]", queue_name);
-    printf("Nome da fila que ira se comunicar\n");
-    scanf(" %[^\n]", destination);
-    msg->destination = destination; 
-  
-    pthread_create(&send, NULL, send_msg, (void*)queue_name);
+    /*
+    if(q_receive = mq_open("/josue",O_RDWR|O_CREAT, 0666, NULL)<0){
+        perror("mq_open");
+        exit(1);
+    }
+    */
+    pthread_create(&send, NULL, send_msg, NULL);
+    
     pthread_create(&receive, NULL, receive_msg, (void*) msg);
     pthread_join (receive, &thread_res);
 }
