@@ -20,7 +20,7 @@ int main(int argc, char *argv[]){
     
     struct mq_attr attr;
     attr.mq_maxmsg = 10;
-    attr.mq_msgsize = strlen(msg_received);
+    attr.mq_msgsize = 100;
     attr.mq_flags = 0;
  
     char destination[10];
