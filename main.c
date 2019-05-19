@@ -23,9 +23,11 @@ int main(int argc, char *argv[]){
     attr.mq_msgsize = 100;
     attr.mq_flags = 0;
  
-    char destination[10];
+    char * delimiter = (char*)malloc(sizeof(char)*20);
+    strcat(delimiter, "/chat-");
     char * queue_name = argv[1];
-    if ((q_receive = mq_open (queue_name, O_RDWR|O_CREAT, 0666 , &attr)) < 0){
+    strcat(delimiter, queue_name);
+    if ((q_receive = mq_open (delimiter, O_RDWR|O_CREAT, 0666 , &attr)) < 0){
         perror ("mq_open");
         printf("q_receive\n"); 
         exit (1);

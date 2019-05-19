@@ -22,7 +22,7 @@ void *send_msg(){
         
         scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
         
-        strcat(delimiter, "/");
+        strcat(delimiter, "/chat-");
         strcat(delimiter, by);
 
         if ((q_send = mq_open (delimiter, O_RDWR)) < 0){
