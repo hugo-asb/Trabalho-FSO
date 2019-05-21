@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <dirent.h>
 #include <stdlib.h>
 #include <mqueue.h>
 #include <sys/stat.h>
@@ -10,41 +11,70 @@
 
 #define MAX_SIZE 100
 
-void *send_msg(){
+void * send_msg(char* from, char * by, char* msg){
+
+    char * delimiter = (char*)malloc(sizeof(char)*20);
+    char * content = (char*)malloc(sizeof(char)*MAX_SIZE);
+    
+    strcat(delimiter, "/chat-");
+    strcat(delimiter, by);
+    if ((q_send = mq_open (delimiter, O_RDWR)) < 0){
+        perror ("mq_open");
+        printf("q_send");
+        exit (1);
+    }
+        
+    strcat(content, from);
+    strcat(content, ":");
+    strcat(content, msg);
+        
+    if((mq_send (q_send, content, strlen(content)+1, 0)) < 0){
+        perror("mq_send");
+        printf("send");
+        exit(1);
+    }
+    free(content);
+    free(delimiter);
+}
+
+void * broadcast(char * from, char* msg){
+    DIR *dir;
+    struct dirent * folder;
+    dir = opendir("/dev/mqueue");
+    char * buffer = ".";
+    char * buffer2 = "..";
+    if(dir){
+        while((folder = readdir(dir))!=NULL){
+            if(strcmp(folder->d_name, buffer)!=0 && strcmp(folder->d_name, buffer2)!=0){
+            char *name = folder->d_name;
+            name +=5;
+            send_msg(from, name, msg);
+            }
+        }
+    }
+        
+}
+
+void * handler_msg(){
    
 
     while(1){
+        
         char * msg = (char*)malloc(sizeof(char)*500);
         char * from = (char*)malloc(sizeof(char)*10);
         char * by = (char*)malloc(sizeof(char)*10);
-        char * content = (char*)malloc(sizeof(char)*MAX_SIZE);
-        char * delimiter = (char*)malloc(sizeof(char)*20);
         
         scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
-        
-        strcat(delimiter, "/chat-");
-        strcat(delimiter, by);
-
-        if ((q_send = mq_open (delimiter, O_RDWR)) < 0){
-            perror ("mq_open");
-            printf("q_send");
-            exit (1);
+        char * all = "all";
+        if(strcmp(by, all)==0){
+            broadcast(from, msg);
+        }else{
+            send_msg(from, by, msg);
         }
-        strcat(content, from);
-        strcat(content, ":");
-        strcat(content, msg);
-        if((mq_send (q_send, content, strlen(content)+1, 0)) < 0){
-            perror("mq_send");
-            printf("send");
-            exit(1);
-    
+        free(msg);
+        free(from);
+        free(by);
     }
-    free(msg);
-    free(from);
-    free(by);
-    free(content);
-    free(delimiter);
-   }
 }
 
 void *receive_msg(void *msg){

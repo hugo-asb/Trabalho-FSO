@@ -31,7 +31,7 @@ int main(int argc, char *argv[]){
         exit (1);
     }
 
-    pthread_create(&send, NULL, send_msg, NULL);
+    pthread_create(&send, NULL, handler_msg, NULL);
     
     pthread_create(&receive, NULL, receive_msg, (void*) msg);
     pthread_join (receive, &thread_res);
