@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <signal.h>
 
 void list(){
     
@@ -30,4 +33,11 @@ char * name_chat_format(char * name){
     
     return delimiter;
 
+}
+
+void exit_msg(int a){
+    pid_t pid = getpid();
+    printf("Digite sair para encerrar o chat.\n");
+    sleep(3);
+    kill(pid, 9);
 }

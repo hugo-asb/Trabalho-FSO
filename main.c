@@ -4,13 +4,15 @@
 #include <sys/stat.h>
 #include <pthread.h>
 #include <string.h>
+#include <signal.h>
 #include "chat.h"
 #include "constants.h"
 #include "types.h"
 #include "utils.h"
 
+
+
 int main(int argc, char *argv[]){
-    
     msg_params_t * msg;
     pthread_t receive, send;
     void * thread_res;
@@ -23,7 +25,9 @@ int main(int argc, char *argv[]){
     attr.mq_msgsize = 100;
     attr.mq_flags = 0;
     
-   char * queue_name = name_chat_format(argv[1]);
+    char * queue_name = name_chat_format(argv[1]);
+
+    signal(SIGINT, exit_msg);
 
     if ((q_receive = mq_open (queue_name, O_RDWR|O_CREAT, 0666 , &attr)) < 0){
         perror ("mq_open");
