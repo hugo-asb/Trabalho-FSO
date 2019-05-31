@@ -27,6 +27,12 @@ int main(int argc, char *argv[]){
     
     char * queue_name = name_chat_format(argv[1]);
 
+    char * all = "all";
+    if(strcmp(argv[1], all)==0){
+        printf("Erro: O nome do usuário não pode ser \"all\".\n");
+        return 0;
+    };
+
     signal(SIGINT, exit_msg);
 
     if ((q_receive = mq_open (queue_name, O_RDWR|O_CREAT, 0666 , &attr)) < 0){
