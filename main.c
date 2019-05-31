@@ -35,11 +35,13 @@ int main(int argc, char *argv[]){
 
     signal(SIGINT, exit_msg);
 
+    mode_t default_umask = umask(0000);
     if ((q_receive = mq_open (queue_name, O_RDWR|O_CREAT, 0666 , &attr)) < 0){
         perror ("mq_open");
         printf("q_receive\n"); 
         exit (1);
     }
+    umask(default_umask);
 
     pthread_create(&send, NULL, handler_msg, NULL);
     
