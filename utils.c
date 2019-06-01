@@ -5,6 +5,8 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <signal.h>
+#include <mqueue.h>
+#include "constants.h"
 
 void list(){
     
@@ -39,5 +41,7 @@ void exit_msg(int a){
     pid_t pid = getpid();
     printf("Digite sair para encerrar o chat.\n");
     sleep(3);
+    mq_unlink(queue_name);
+
     kill(pid, 9);
 }

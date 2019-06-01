@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
     attr.mq_msgsize = 100;
     attr.mq_flags = 0;
     
-    char * queue_name = name_chat_format(argv[1]);
+    queue_name = name_chat_format(argv[1]);
 
     char * all = "all";
     if(strcmp(argv[1], all)==0){
