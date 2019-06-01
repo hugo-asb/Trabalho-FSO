@@ -9,6 +9,7 @@
 #include "chat.h"
 #include "types.h"
 #include "string.h"
+#include "utils.h"
 
 #define MAX_SIZE 100
 
@@ -61,17 +62,18 @@ void * handler_msg(){
 
     while(1){
         
-        //char * msg = (char*)malloc(sizeof(char)*500);
-        //char * from = (char*)malloc(sizeof(char)*10);
-        //char * by = (char*)malloc(sizeof(char)*10);
         char * chat_content = read_message();
-        Msg * msg = get_attrs_msg(chat_content);
-        //scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
-        char * all = "all";
-        if(strcmp(msg->sender, all)==0){
-            broadcast(msg->sender, msg->content);
+        char * list_ = "list\n";
+        if(strcmp(chat_content, list_)==0){
+            list();
         }else{
-            send_msg(msg->sender, msg->receive, msg->content);
+            Msg * msg = get_attrs_msg(chat_content);
+            char * all = "all";
+            if(strcmp(msg->sender, all)==0){
+                broadcast(msg->sender, msg->content);
+            }else{
+                send_msg(msg->sender, msg->receive, msg->content);
+            }
         }
     }
 }
