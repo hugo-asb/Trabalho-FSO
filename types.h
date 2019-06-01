@@ -2,8 +2,9 @@
 #define TYPES_H_
 
 typedef struct{
-    int value;
-    char * destination;
-}msg_params_t; 
+    char * sender;
+    char * receive;
+    char * content;
+}Msg; 
 
 #endif

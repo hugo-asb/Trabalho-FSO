@@ -8,6 +8,7 @@
 #include "constants.h"
 #include "chat.h"
 #include "types.h"
+#include "string.h"
 
 #define MAX_SIZE 100
 
@@ -60,24 +61,22 @@ void * handler_msg(){
 
     while(1){
         
-        char * msg = (char*)malloc(sizeof(char)*500);
-        char * from = (char*)malloc(sizeof(char)*10);
-        char * by = (char*)malloc(sizeof(char)*10);
-        
-        scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
+        //char * msg = (char*)malloc(sizeof(char)*500);
+        //char * from = (char*)malloc(sizeof(char)*10);
+        //char * by = (char*)malloc(sizeof(char)*10);
+        char * chat_content = read_message();
+        Msg * msg = get_attrs_msg(chat_content);
+        //scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
         char * all = "all";
-        if(strcmp(by, all)==0){
-            broadcast(from, msg);
+        if(strcmp(msg->sender, all)==0){
+            broadcast(msg->sender, msg->content);
         }else{
-            send_msg(from, by, msg);
+            send_msg(msg->sender, msg->receive, msg->content);
         }
-        free(msg);
-        free(from);
-        free(by);
     }
 }
 
-void *receive_msg(void *msg){
+void *receive_msg(){
     
     char msg_received[500];
     while(1){
