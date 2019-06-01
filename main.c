@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
     void * thread_res;
     
     struct mq_attr attr;
-    attr.mq_maxmsg = 10;
+    attr.mq_maxmsg = 1;
     attr.mq_msgsize = 100;
     attr.mq_flags = 0;
     

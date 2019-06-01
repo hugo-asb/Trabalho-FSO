@@ -11,7 +11,7 @@ void list(){
     char * buffer = ".";
     char * buffer2 = "..";
     if(dir){
-        printf("Pessoas Online\n")
+        printf("Pessoas Online\n");
         while((folder = readdir(dir))!=NULL){
             if(strcmp(folder->d_name, buffer)!=0 && strcmp(folder->d_name, buffer2)!=0){
             char *name = folder->d_name;

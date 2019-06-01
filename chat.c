@@ -29,11 +29,21 @@ void * send_msg(char* from, char * by, char* msg){
     strcat(content, from);
     strcat(content, ":");
     strcat(content, msg);
-        
-    if((mq_send (q_send, content, strlen(content)+1, 0)) < 0){
-        perror("mq_send");
-        printf("send");
-        exit(1);
+    
+
+    struct timespec *time = (struct timespec*)malloc(sizeof(struct timespec));
+    time->tv_sec = 30000;
+    time->tv_nsec = 0;
+    int tried = 1;
+    while(((mq_timedsend (q_send, content, strlen(content)+1, 0, time)) < 0)&&tried <4){
+        printf("Reenviando\n");
+        printf("%d\n",tried);
+        sleep(3);
+        tried ++;
+       
+    }
+    if(tried == 4){
+        printf("ERRO %s:%s:%s\n",from, by, msg);
     }
     free(content);
     free(delimiter);
