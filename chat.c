@@ -10,6 +10,7 @@
 #include "types.h"
 #include "string.h"
 #include "utils.h"
+#include <errno.h>
 
 #define MAX_SIZE 100
 
@@ -17,13 +18,14 @@ void * send_msg(char* from, char * by, char* msg){
 
     char * delimiter = (char*)malloc(sizeof(char)*20);
     char * content = (char*)malloc(sizeof(char)*MAX_SIZE);
-    
+    int flag_error = 1;
     strcat(delimiter, "/chat-");
     strcat(delimiter, by);
     if ((q_send = mq_open (delimiter, O_RDWR)) < 0){
-        perror ("mq_open");
-        printf("q_send");
-        exit (1);
+        if(errno == 2){
+            printf("UNKNOWNUSER %s\n", by);
+            flag_error = -1;
+        }
     }
         
     strcat(content, from);
@@ -35,15 +37,17 @@ void * send_msg(char* from, char * by, char* msg){
     time->tv_sec = 30000;
     time->tv_nsec = 0;
     int tried = 1;
-    while(((mq_timedsend (q_send, content, strlen(content)+1, 0, time)) < 0)&&tried <4){
-        printf("Reenviando\n");
-        printf("%d\n",tried);
-        sleep(3);
-        tried ++;
-       
-    }
-    if(tried == 4){
-        printf("ERRO %s:%s:%s\n",from, by, msg);
+    if(flag_error>0){
+        while(((mq_timedsend (q_send, content, strlen(content)+1, 0, time)) < 0)&&tried <4){
+            printf("Reenviando\n");
+            printf("%d\n",tried);
+            sleep(3);
+            tried ++;
+            printf("%d",errno);
+        }
+        if(tried == 4){
+            printf("ERRO %s:%s:%s\n",from, by, msg);
+        }
     }
     free(content);
     free(delimiter);
@@ -85,6 +89,8 @@ void * handler_msg(){
                 send_msg(msg->sender, msg->receive, msg->content);
             }
         }
+        printf("acabou\n");
+        free(chat_content);
     }
 }
 
