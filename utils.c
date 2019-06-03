@@ -39,10 +39,12 @@ char * name_chat_format(char * name){
 }
 
 void exit_msg(int a){
-    pid_t pid = getpid();
     printf("Digite sair para encerrar o chat.\n");
-    sleep(3);
-    mq_unlink(queue_name);
+}
 
+void exit_command(){
+    pid_t pid = getpid();
+    mq_unlink(queue_name);
+    printf("\nChat finalizado!\n");
     kill(pid, 9);
 }

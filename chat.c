@@ -79,8 +79,11 @@ void * handler_msg(){
         
         char * chat_content = read_message();
         char * list_ = "list\n";
+        char * exit_ = "sair\n";
         if(strcmp(chat_content, list_)==0){
             list();
+        } else if(strcmp(chat_content, exit_)==0){
+            exit_command();
         }else{
             Msg * msg = get_attrs_msg(chat_content);
             char * all = "all";
