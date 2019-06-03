@@ -8,16 +8,17 @@ void list(){
     DIR * dir;
     struct dirent *folder;
     dir = opendir("/dev/mqueue/");
-    
+    char * buffer = ".";
+    char * buffer2 = "..";
     if(dir){
-
+        printf("Pessoas Online\n");
         while((folder = readdir(dir))!=NULL){
-             printf("%s\n", folder->d_name);       
-        
+            if(strcmp(folder->d_name, buffer)!=0 && strcmp(folder->d_name, buffer2)!=0){
+            char *name = folder->d_name;
+            name +=5;
+            printf("%s\n", name);       
+            }
         }
-        closedir(dir);
-    }else{
-        printf("erro ao abrir o diretorio");
     }
 }
 

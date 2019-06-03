@@ -8,6 +8,9 @@
 #include "constants.h"
 #include "chat.h"
 #include "types.h"
+#include "string.h"
+#include "utils.h"
+#include <errno.h>
 
 #define MAX_SIZE 100
 
@@ -15,23 +18,36 @@ void * send_msg(char* from, char * by, char* msg){
 
     char * delimiter = (char*)malloc(sizeof(char)*20);
     char * content = (char*)malloc(sizeof(char)*MAX_SIZE);
-    
+    int flag_error = 1;
     strcat(delimiter, "/chat-");
     strcat(delimiter, by);
     if ((q_send = mq_open (delimiter, O_RDWR)) < 0){
-        perror ("mq_open");
-        printf("q_send");
-        exit (1);
+        if(errno == 2){
+            printf("UNKNOWNUSER %s\n", by);
+            flag_error = -1;
+        }
     }
         
     strcat(content, from);
     strcat(content, ":");
     strcat(content, msg);
-        
-    if((mq_send (q_send, content, strlen(content)+1, 0)) < 0){
-        perror("mq_send");
-        printf("send");
-        exit(1);
+    
+
+    struct timespec *time = (struct timespec*)malloc(sizeof(struct timespec));
+    time->tv_sec = 30000;
+    time->tv_nsec = 0;
+    int tried = 1;
+    if(flag_error>0){
+        while(((mq_timedsend (q_send, content, strlen(content)+1, 0, time)) < 0)&&tried <4){
+            printf("Reenviando\n");
+            printf("%d\n",tried);
+            sleep(3);
+            tried ++;
+            printf("%d",errno);
+        }
+        if(tried == 4){
+            printf("ERRO %s:%s:%s\n",from, by, msg);
+        }
     }
     free(content);
     free(delimiter);
@@ -60,24 +76,25 @@ void * handler_msg(){
 
     while(1){
         
-        char * msg = (char*)malloc(sizeof(char)*500);
-        char * from = (char*)malloc(sizeof(char)*10);
-        char * by = (char*)malloc(sizeof(char)*10);
-        
-        scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
-        char * all = "all";
-        if(strcmp(by, all)==0){
-            broadcast(from, msg);
+        char * chat_content = read_message();
+        char * list_ = "list\n";
+        if(strcmp(chat_content, list_)==0){
+            list();
         }else{
-            send_msg(from, by, msg);
+            Msg * msg = get_attrs_msg(chat_content);
+            char * all = "all";
+            if(strcmp(msg->sender, all)==0){
+                broadcast(msg->sender, msg->content);
+            }else{
+                send_msg(msg->sender, msg->receive, msg->content);
+            }
         }
-        free(msg);
-        free(from);
-        free(by);
+        printf("acabou\n");
+        free(chat_content);
     }
 }
 
-void *receive_msg(void *msg){
+void *receive_msg(){
     
     char msg_received[500];
     while(1){
