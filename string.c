@@ -12,7 +12,6 @@ char * read_message(){
         c = getchar();
         if(c!='\n'){
             content[i] = c;
-            printf("char == %d\n",c);
             i++;
         }
     }while(c!='\n');
