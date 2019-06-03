@@ -80,10 +80,11 @@ void * handler_msg(){
 
     while(1){
         
-        char * chat_content = read_message();
-        char * list_ = "list\n";
-        char * exit_ = "sair\n";
-        if(strcmp(chat_content, list_)==0 || strlen(chat_content)==6){
+        char * chat_content = NULL; 
+        chat_content = read_message();
+        char * list_ = "list";
+        char * exit_ = "sair";
+        if(strcmp(chat_content, list_)==0){
             list();
         } else if(strcmp(chat_content, exit_)==0){
             exit_command();
@@ -96,7 +97,6 @@ void * handler_msg(){
                 send_msg(msg->sender, msg->receive, msg->content);
             }
         }
-        free(chat_content);
     }
 }
 
