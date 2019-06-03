@@ -2,6 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <signal.h>
+#include <mqueue.h>
+#include "constants.h"
 
 void list(){
     
@@ -31,4 +36,15 @@ char * name_chat_format(char * name){
     
     return delimiter;
 
+}
+
+void exit_msg(int a){
+    printf("Digite sair para encerrar o chat.\n");
+}
+
+void exit_command(){
+    pid_t pid = getpid();
+    mq_unlink(queue_name);
+    printf("\nChat finalizado!\n");
+    kill(pid, 9);
 }

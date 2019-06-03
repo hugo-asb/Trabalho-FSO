@@ -5,5 +5,6 @@
 #include <sys/stat.h>
 
 mqd_t q_send, q_receive;
+char * queue_name;
 
 #endif
