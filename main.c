@@ -13,13 +13,10 @@
 
 
 int main(int argc, char *argv[]){
-    msg_params_t * msg;
+    
     pthread_t receive, send;
     void * thread_res;
     
-    msg = (msg_params_t*)malloc(sizeof(msg_params_t));
-    char msg_received[500];
-
     struct mq_attr attr;
     attr.mq_maxmsg = 10;
     attr.mq_msgsize = 100;
@@ -45,7 +42,7 @@ int main(int argc, char *argv[]){
 
     pthread_create(&send, NULL, handler_msg, NULL);
     
-    pthread_create(&receive, NULL, receive_msg, (void*) msg);
+    pthread_create(&receive, NULL, receive_msg, NULL);
     pthread_join (receive, &thread_res);
 }
 
