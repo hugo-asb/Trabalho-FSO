@@ -39,6 +39,7 @@ int main(int argc, char *argv[]){
         exit (1);
     }
     umask(default_umask);
+    print_initial_menu();
 
     pthread_create(&send, NULL, handler_msg, NULL);
     

@@ -30,7 +30,7 @@ void * send_msg(char* from, char * by, char* msg){
     }
         
     strcat(content, from);
-    strcat(content, ":");
+    strcat(content, ": ");
     strcat(content, msg);
     
 
@@ -40,11 +40,11 @@ void * send_msg(char* from, char * by, char* msg){
     int tried = 1;
     if(flag_error>0){
         while(((mq_timedsend (q_send, content, strlen(content)+1, 0, time)) < 0)&&tried <4){
+            printf("%d - ",tried);
             printf("Reenviando\n");
-            printf("%d\n",tried);
             sleep(3);
             tried ++;
-            printf("%d",errno);
+            //printf("%d",errno);
         }
         if(tried == 4){
             printf("ERRO %s:%s:%s\n",from, by, msg);
@@ -111,7 +111,7 @@ void *receive_msg(){
             exit(1);
         }
 
-        printf("%s\n", msg_received);
+        printf("\t%s\n", msg_received);
     }
 }
 

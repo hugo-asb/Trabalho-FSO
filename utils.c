@@ -16,15 +16,18 @@ void list(){
     char * buffer = ".";
     char * buffer2 = "..";
     if(dir){
-        printf("Pessoas Online\n");
+        printf("\n------------------------\n");    
+        printf("     Pessoas Online\n");
+        printf("------------------------\n");
         while((folder = readdir(dir))!=NULL){
             if(strcmp(folder->d_name, buffer)!=0 && strcmp(folder->d_name, buffer2)!=0){
             char *name = folder->d_name;
             name +=5;
-            printf("%s\n", name);       
+            printf(" - %s\n", name);       
             }
         }
     }
+    printf("------------------------\n\n");
 }
 
 char * name_chat_format(char * name){
@@ -47,4 +50,14 @@ void exit_command(){
     mq_unlink(queue_name);
     printf("\nChat finalizado!\n");
     kill(pid, 9);
+}
+
+void print_initial_menu(){
+    printf("-------------------------------------------------------------------------\n");    
+    printf("\t\tO chat foi iniciado.\n");
+    printf("-------------------------------------------------------------------------\n");
+    printf("- Utilize o padrao DE:PARA:MENSAGEM para enviar uma mensagem para alguem.\n");
+    printf("- Use o camando \"list\" para ver as pessoas que estão online.\n");
+    printf("- Use o camando \"sair\" para encerrar o chat.\n");
+    printf("-------------------------------------------------------------------------\n\n");
 }
