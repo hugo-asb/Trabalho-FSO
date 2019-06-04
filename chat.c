@@ -55,11 +55,13 @@ void * send_msg(char* from, char * by, char* msg){
 }
 
 void * broadcast(char * from, char* msg){
+    
     DIR *dir;
     struct dirent * folder;
     dir = opendir("/dev/mqueue");
     char * buffer = ".";
     char * buffer2 = "..";
+      
     if(dir){
         while((folder = readdir(dir))!=NULL){
             if(strcmp(folder->d_name, buffer)!=0 && strcmp(folder->d_name, buffer2)!=0){
@@ -72,7 +74,6 @@ void * broadcast(char * from, char* msg){
             }
         }
     }
-        
 }
 
 void * handler_msg(){
@@ -80,10 +81,9 @@ void * handler_msg(){
 
     while(1){
         
-        char * chat_content = NULL; 
-        chat_content = read_message();
-        char * list_ = "list";
-        char * exit_ = "sair";
+        char * chat_content = read_message();
+        char * list_ = "list\n";
+        char * exit_ = "sair\n";
         if(strcmp(chat_content, list_)==0){
             list();
         } else if(strcmp(chat_content, exit_)==0){

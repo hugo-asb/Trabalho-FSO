@@ -4,16 +4,13 @@
 
 char * read_message(){
     
-    char * content = NULL; 
-    content = (char*)malloc(sizeof(char)*522);
+    char * content = (char*)malloc(sizeof(char)*522);
     int i = 0;
     char c;
     do{
-        c = getchar();
-        if(c!='\n'){
-            content[i] = c;
-            i++;
-        }
+       c = getchar();
+       content[i] = c;
+       i++;
     }while(c!='\n');
     return content;
 }
