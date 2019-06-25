@@ -14,8 +14,8 @@
 
 int main(int argc, char *argv[]){
     
-    pthread_t receive, send;
-    void * thread_res;
+    pthread_t receive, send, channel_receive;
+    void * thread_res, channel_res;
     
     struct mq_attr attr;
     attr.mq_maxmsg = 10;
@@ -33,17 +33,18 @@ int main(int argc, char *argv[]){
     signal(SIGINT, exit_msg);
 
     mode_t default_umask = umask(0000);
-    if ((q_receive = mq_open (queue_name, O_RDWR|O_CREAT, 0666 , &attr)) < 0){
+    if ((q_receive = mq_open (queue_name, O_RDWR|O_CREAT, 0622 , &attr)) < 0){
         perror ("mq_open");
         printf("q_receive\n"); 
         exit (1);
     }
+
     umask(default_umask);
     print_initial_menu();
 
     pthread_create(&send, NULL, handler_msg, NULL);
-    
     pthread_create(&receive, NULL, receive_msg, NULL);
+    pthread_create(&channel_receive, NULL, received, NULL);
     pthread_join (receive, &thread_res);
 }
 
