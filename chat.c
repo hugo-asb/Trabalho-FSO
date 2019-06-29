@@ -5,14 +5,14 @@
 #include <sys/stat.h>
 #include <pthread.h>
 #include <string.h>
+#include <errno.h>
+#include <unistd.h>
 #include "constants.h"
 #include "chat.h"
+#include "channel.h"
 #include "types.h"
 #include "string.h"
 #include "utils.h"
-#include <errno.h>
-#include <unistd.h>
-#include "channel.h"
 
 #define MAX_SIZE 100
 
@@ -97,8 +97,8 @@ void * handler_msg(){
             }
         }else if(command == 4 ){
             char channel_name[20];
-            scanf("%s ", channel);
-            create_channel(channel); 
+            scanf("%s ", channel_name);
+            create_channel(channel_name); 
         }
     }
 }

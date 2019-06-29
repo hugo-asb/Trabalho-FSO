@@ -6,16 +6,17 @@
 #include <string.h>
 #include <signal.h>
 #include "chat.h"
+#include "channel.h"
 #include "constants.h"
 #include "types.h"
 #include "utils.h"
 
 
-
 int main(int argc, char *argv[]){
     
-    pthread_t receive, send, channel_receive;
-    void * thread_res, channel_res;
+    pthread_t receive, send, channel_receive_msg;
+    void * thread_res;
+    void * channel_res;
     
     struct mq_attr attr;
     attr.mq_maxmsg = 10;
@@ -44,7 +45,8 @@ int main(int argc, char *argv[]){
 
     pthread_create(&send, NULL, handler_msg, NULL);
     pthread_create(&receive, NULL, receive_msg, NULL);
-    pthread_create(&channel_receive, NULL, received, NULL);
+    pthread_create(&channel_receive_msg, NULL, channel_receive, NULL);
     pthread_join (receive, &thread_res);
+    pthread_join (channel_receive_msg, &channel_res);
 }
 

@@ -8,7 +8,7 @@ typedef struct{
 }Msg;
 
 typedef struct {
+    char * name;
+}User_channel;
 
-char * name;
-}User_channel
 #endif
