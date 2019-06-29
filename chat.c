@@ -79,7 +79,7 @@ void * handler_msg(){
 
     while(1){
         
-        int command = 0 ;
+        int command;
         scanf("%d", &command);
         if(command == 2){
             list();
@@ -97,7 +97,7 @@ void * handler_msg(){
             }
         }else if(command == 4 ){
             char channel_name[20];
-            scanf("%s ", channel_name);
+            scanf("%s", channel_name);
             create_channel(channel_name); 
         }
     }

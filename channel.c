@@ -3,6 +3,7 @@
 #include <string.h>
 #include <mqueue.h>
 #include <sys/stat.h>
+#include <pthread.h>
 #include "constants.h"
 #include "types.h"
 #include "chat.h"
@@ -17,7 +18,10 @@ int count = 0;
 void create_channel(char * channel_name){
     
     channel = channel_name; 
-    char * channel_delimiter = "/canal-";
+    char * channel_delimiter = (char*)malloc(sizeof(char)*20);
+    //char * channel_delimiter = "/canal-";
+    
+    strcat(channel_delimiter, "/canal-");
     strcat(channel_delimiter, channel_name);
     mode_t  default_umask = umask(0000);
     struct  mq_attr attr;
@@ -30,6 +34,11 @@ void create_channel(char * channel_name){
     
     }
     umask(default_umask);
+    has_channel =1;
+    pthread_t channel_receive_msg;
+    void * channel_res;
+    pthread_create(&channel_receive_msg, NULL, channel_receive, NULL);
+    pthread_join(channel_receive_msg, &channel_res);
 }
 /*
 void init(){
