@@ -39,15 +39,16 @@ int main(int argc, char *argv[]){
         printf("q_receive\n"); 
         exit (1);
     }
-
+    create_channel(argv[2]);
     umask(default_umask);
     print_initial_menu();
 
+
     pthread_create(&send, NULL, handler_msg, NULL);
+    pthread_create(&channel_receive_msg, NULL, channel_receive, NULL);
     pthread_create(&receive, NULL, receive_msg, NULL);
     pthread_join (receive, &thread_res);
+    pthread_join (channel_receive_msg, &channel_res);
     
-//        pthread_create(&channel_receive_msg, NULL, channel_receive, NULL);
-  //  pthread_join (channel_receive_msg, &channel_res);
 }
 

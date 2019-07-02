@@ -3,18 +3,17 @@
 #include "string_utils.h"
 #include "types.h"
 
-char * find(char * content, int * pos){
-    int i = *pos;
+char * find(char * content, int  pos){
+    int i = pos;
     char c;
     int k = 0;
-    int j = *pos;
+    int j = pos;
     do{
         
-        c = content[*pos];
+        c = content[pos];
         i++;
-        *pos = i;
-
-    }while(c!=':' && c!='\n');
+        pos = i;
+    }while(c!=':');
     
     char * element =(char*)malloc(sizeof(char)*i-j);
     

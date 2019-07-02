@@ -60,5 +60,6 @@ void print_initial_menu(){
     printf("- Use o camando \"2\" para ver as pessoas que estão online.\n");
     printf("- Use o camando \"3\" para encerrar o chat.\n");
     printf("- Use o camando \"4\" para criar uma sala\n");
+    printf("- Use o camando \"5\" para enviar msg a uma sala\n");
     printf("-------------------------------------------------------------------------\n\n");
 }

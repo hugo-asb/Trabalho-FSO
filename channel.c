@@ -19,7 +19,6 @@ void create_channel(char * channel_name){
     
     channel = channel_name; 
     char * channel_delimiter = (char*)malloc(sizeof(char)*20);
-    //char * channel_delimiter = "/canal-";
     
     strcat(channel_delimiter, "/canal-");
     strcat(channel_delimiter, channel_name);
@@ -32,13 +31,15 @@ void create_channel(char * channel_name){
         perror("mq_open");
         exit(1);
     
+    }else{
+        printf("sala criada como sucesso\n");
+        
     }
     umask(default_umask);
-    has_channel =1;
-    pthread_t channel_receive_msg;
-    void * channel_res;
-    pthread_create(&channel_receive_msg, NULL, channel_receive, NULL);
-    pthread_join(channel_receive_msg, &channel_res);
+    //pthread_t channel_receive_msg;
+    //void * channel_res;
+    //pthread_create(&channel_receive_msg, NULL, channel_receive, NULL);
+//    return;
 }
 /*
 void init(){
@@ -50,11 +51,11 @@ void init(){
 */
 void add_to_channel(char * name){
     
+    //printf("add name = %s", name);
     User_channel new_user;
-    new_user.name = name;
+    new_user.name = "josue";
     users[count] = new_user;
     count ++;
-
 }
 /*
 void remove(){
@@ -63,24 +64,25 @@ void remove(){
 */
 
 void * send_msg_channel(char * from, char * msg){
-    
-    char * content = (char*)malloc(sizeof(char)*MAX_SIZE);
-    
+   
+    char * content = (char*)malloc(sizeof(char)*500);
+    char * channel_name = (char*)malloc(sizeof(char)*20);    
     strcat(content, from);
-    strcat(content, ": ");
-    strcat(content, "#");
+    strcat(content, ":# ");
     
     //channel name
     strcat(content, channel);
     strcat(content, msg);
-
-    if((q_send_channel = mq_open(from, O_RDWR))<0){
+    strcat(channel_name,"/canal-");
+    strcat(channel_name, channel);
+    
+    if((q_send_channel = mq_open(channel_name, O_RDWR))<0){
         
         perror("mq_send");
-        printf("mq_send");
+        printf("channel_send");
     
     }
-    if((mq_send(q_send_channel, (void*)&msg, sizeof(msg),0))<0){
+    if((mq_send(q_send_channel, content, strlen(content)+1,0))<0){
         perror("mq_send");
         exit(1);
     }
@@ -89,19 +91,30 @@ void * send_msg_channel(char * from, char * msg){
 void * channel_receive(){   
    
     char msg_received[500];
-    
+    char * channel_name = (char*)malloc(sizeof(char)*20);
     while(1){
         if(mq_receive(q_receive_channel, msg_received, sizeof(msg_received), NULL)<0){
             perror("mq_receive");
             printf("mq_receive");
             exit(1);
+        
         }
-    }
+        printf("%s\n", msg_received);
     
     if(strstr(msg_received, "join")!= NULL){
          char * name  = find(msg_received, 0);
-         add_to_channel(name);
-    }else if((strstr(msg_received, "leave")!= NULL)){
+         add_to_channel(name); 
+         int i; 
+         for(i = 0 ; i< count; i++){
+
+            char * name = users[i].name;
+            //printf("%s", name);
+            send_msg_channel(name, "foi adicionado ao chat\n");      
+         }
+ 
+    }
+    /*
+    else if((strstr(msg_received, "leave")!= NULL)){
          //remove();
     }else{
         // send msg to all in the channel 
@@ -111,8 +124,9 @@ void * channel_receive(){
             char * queue_name = format_channel_name(name);
             send_msg_channel(queue_name, "teste");      
         }
- 
-    }    
+    }
+    */
+    }
 }
 
 char * format_channel_name ( char * name){

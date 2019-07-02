@@ -29,7 +29,7 @@ void * send_msg(char* from, char * by, char* msg){
             flag_error = -1;
         }
     }
-        
+    
     strcat(content, from);
     strcat(content, ": ");
     strcat(content, msg);
@@ -79,6 +79,7 @@ void * handler_msg(){
 
     while(1){
         
+        printf("Digite seu comando: ");
         int command;
         scanf("%d", &command);
         if(command == 2){
@@ -87,7 +88,7 @@ void * handler_msg(){
             exit_command();
         }else if(command == 1){
             char * msg = (char*)malloc(sizeof(char)*500);
-            char * from = (char*)malloc(sizeof(char*)*10);
+            char * from = (char*)malloc(sizeof(char)*10);
             char * by = (char*)malloc(sizeof(char)*10);
             scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
             if(strcmp(by, "all")==0){
@@ -99,6 +100,12 @@ void * handler_msg(){
             char channel_name[20];
             scanf("%s", channel_name);
             create_channel(channel_name); 
+        }else if(command == 5){
+            char * msg = (char*)malloc(sizeof(char)*500);
+            char * from = (char*)malloc(sizeof(char)*20);
+            char * by = (char*)malloc(sizeof(char)*20);
+            scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
+            send_msg_channel(from, msg);
         }
     }
 }
