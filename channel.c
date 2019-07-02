@@ -36,24 +36,12 @@ void create_channel(char * channel_name){
         
     }
     umask(default_umask);
-    //pthread_t channel_receive_msg;
-    //void * channel_res;
-    //pthread_create(&channel_receive_msg, NULL, channel_receive, NULL);
-//    return;
 }
-/*
-void init(){
-    int i = 0;
-    for(i = 0 ;i<50 ; i++){
-        users[i];
-    }
-}
-*/
+
 void add_to_channel(char * name){
     
-    //printf("add name = %s", name);
     User_channel new_user;
-    new_user.name = "josue";
+    new_user.name = name;
     users[count] = new_user;
     count ++;
 }
@@ -64,18 +52,21 @@ void remove(){
 */
 
 void * send_msg_channel(char * from, char * msg){
-   
+    
     char * content = (char*)malloc(sizeof(char)*500);
     char * channel_name = (char*)malloc(sizeof(char)*20);    
-    strcat(content, from);
-    strcat(content, ":# ");
     
-    //channel name
+   
+    strcat(content, "#");
     strcat(content, channel);
+    strcat(content, ":");
+    strcat(content, from);
+    strcat(content, ":");
+    //channel name
     strcat(content, msg);
     strcat(channel_name,"/canal-");
     strcat(channel_name, channel);
-    
+    printf("conteudo = %s", content); 
     if((q_send_channel = mq_open(channel_name, O_RDWR))<0){
         
         perror("mq_send");
@@ -99,17 +90,21 @@ void * channel_receive(){
             exit(1);
         
         }
-        printf("%s\n", msg_received);
+        printf("\n%s\n", msg_received);
     
     if(strstr(msg_received, "join")!= NULL){
+         char * name_to_send = (char*)malloc(sizeof(char)*20);
+         
+         printf("message == %s\n", msg_received);
          char * name  = find(msg_received, 0);
-         add_to_channel(name); 
+         
+         strcat(name_to_send, name);
+         add_to_channel(name_to_send); 
          int i; 
-         for(i = 0 ; i< count; i++){
+         for(i =0 ; i< count; i++){
 
             char * name = users[i].name;
-            //printf("%s", name);
-            send_msg_channel(name, "foi adicionado ao chat\n");      
+            send_msg_channel(name, "foi adicionado ao canal!\n");      
          }
  
     }
