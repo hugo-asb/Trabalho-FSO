@@ -66,7 +66,6 @@ void * send_msg_channel(char * from, char * msg){
     strcat(content, msg);
     strcat(channel_name,"/canal-");
     strcat(channel_name, channel);
-    printf("conteudo = %s", content); 
     if((q_send_channel = mq_open(channel_name, O_RDWR))<0){
         
         perror("mq_send");
@@ -95,10 +94,11 @@ void * channel_receive(){
     if(strstr(msg_received, "join")!= NULL){
          char * name_to_send = (char*)malloc(sizeof(char)*20);
          
-         printf("message == %s\n", msg_received);
-         char * name  = find(msg_received, 0);
+         char * name_s  = find(msg_received, 0);
+         int position = strlen(name_s)+1; 
          
-         strcat(name_to_send, name);
+         char * name_r  = find(msg_received, position);
+         strcat(name_to_send, name_r);
          add_to_channel(name_to_send); 
          int i; 
          for(i =0 ; i< count; i++){
