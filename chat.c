@@ -75,6 +75,18 @@ void * broadcast(char * from, char* msg){
     }
 }
 
+int check(char* from){
+    int i = 0;
+    
+    for(i = 0 ; i<count_; i++){
+        printf("%s", users[i].name);
+        if(strcmp(users[i].name, from)==0){
+            return 1;
+        }
+    }
+    return -1;
+}
+
 void * handler_msg(){
 
     while(1){
@@ -105,7 +117,15 @@ void * handler_msg(){
             char * from = (char*)malloc(sizeof(char)*20);
             char * by = (char*)malloc(sizeof(char)*20);
             scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
-            send_msg_channel(from, msg);
+            if(strstr(msg, "join")!=NULL){
+                send_msg_channel(from, msg);
+            }else{
+                if(check(from) ==1){
+                    send_msg_channel(from, msg);
+                }else{
+                    send_msg_channel(from, "Nao pertence ao canal");
+                }
+            }
         }
     }
 }

@@ -10,8 +10,8 @@
 #include "string_utils.h"
 #include "channel.h"
 
-User_channel users[50];
-int count = 0;
+//User_channel users[50];
+//int count = 0;
 
 #define MAX_SIZE 100
 
@@ -42,8 +42,8 @@ void add_to_channel(char * name){
     
     User_channel new_user;
     new_user.name = name;
-    users[count] = new_user;
-    count ++;
+    users[count_] = new_user;
+    count_ ++;
 }
 /*
 void remove(){
@@ -101,7 +101,7 @@ void * channel_receive(){
          strcat(name_to_send, name_r);
          add_to_channel(name_to_send); 
          int i; 
-         for(i =0 ; i< count; i++){
+         for(i =0 ; i< count_; i++){
 
             char * name = users[i].name;
             send_msg_channel(name, "foi adicionado ao canal!\n");      

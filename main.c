@@ -24,7 +24,7 @@ int main(int argc, char *argv[]){
     attr.mq_flags = 0;
     
     queue_name = name_chat_format(argv[1]);
-
+    count_ = 0;
     char * all = "all";
     if(strcmp(argv[1], all)==0){
         printf("Erro: O nome do usuário não pode ser \"all\".\n");
