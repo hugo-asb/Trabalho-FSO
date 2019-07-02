@@ -65,11 +65,13 @@ void * broadcast(char * from, char* msg){
         while((folder = readdir(dir))!=NULL){
             if(strcmp(folder->d_name, buffer)!=0 && strcmp(folder->d_name, buffer2)!=0){
             char *name = folder->d_name;
-            name +=5;
-            char  * broad_cast_msg = (char*)malloc(sizeof(char)*500);
-            strcat(broad_cast_msg, "Broadcast de ");
-            strcat(broad_cast_msg, from);
-            send_msg(broad_cast_msg, name, msg);
+            if(strstr(name, "chat")!=NULL){
+                name +=5;
+                char  * broad_cast_msg = (char*)malloc(sizeof(char)*500);
+                strcat(broad_cast_msg, "\nBroadcast de ");
+                strcat(broad_cast_msg, from);
+                send_msg(broad_cast_msg, name, msg);
+            }
             }
         }
     }
