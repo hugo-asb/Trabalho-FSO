@@ -45,11 +45,20 @@ void add_to_channel(char * name){
     users[count_] = new_user;
     count_ ++;
 }
-/*
-void remove(){
-    
+
+void remove(char * name){
+    int i;
+    int position;
+    for(int i = 0 ; i< count_;i ++){
+        if(strcmp(Users[i].name, name) == 0){
+            position = i;
+        }
+    }
+    int j;
+    for(j = position; j< count; j++){
+        Users[j] = Users[j+1];
+    }
 }
-*/
 
 void * send_msg_channel(char * from, char * msg){
     
@@ -108,9 +117,9 @@ void * channel_receive(){
          }
  
     }
-    /*
     else if((strstr(msg_received, "leave")!= NULL)){
-         //remove();
+         char * name_s  = find(msg_received, 0);
+         remove(name_s);
     }else{
         // send msg to all in the channel 
         int i = 0;  
@@ -120,7 +129,6 @@ void * channel_receive(){
             send_msg_channel(queue_name, "teste");      
         }
     }
-    */
     }
 }
 

@@ -121,6 +121,8 @@ void * handler_msg(){
             scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
             if(strstr(msg, "join")!=NULL){
                 send_msg_channel(from, msg);
+            }else if(strstr(msg, "leave")!=NULL){
+                send_msg_channel(from, "Saiu do canal!");
             }else{
                 if(check(from) ==1){
                     send_msg_channel(from, msg);
