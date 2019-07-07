@@ -5,13 +5,14 @@
 #include <sys/stat.h>
 #include <pthread.h>
 #include <string.h>
+#include <errno.h>
+#include <unistd.h>
 #include "constants.h"
 #include "chat.h"
+#include "channel.h"
 #include "types.h"
 #include "string.h"
 #include "utils.h"
-#include <errno.h>
-#include <unistd.h>
 
 #define MAX_SIZE 100
 
@@ -28,11 +29,10 @@ void * send_msg(char* from, char * by, char* msg){
             flag_error = -1;
         }
     }
-        
+    
     strcat(content, from);
     strcat(content, ": ");
     strcat(content, msg);
-    
 
     struct timespec *time = (struct timespec*)malloc(sizeof(struct timespec));
     time->tv_sec = 30000;
@@ -44,7 +44,6 @@ void * send_msg(char* from, char * by, char* msg){
             printf("Reenviando\n");
             sleep(3);
             tried ++;
-            //printf("%d",errno);
         }
         if(tried == 4){
             printf("ERRO %s:%s:%s\n",from, by, msg);
@@ -66,35 +65,70 @@ void * broadcast(char * from, char* msg){
         while((folder = readdir(dir))!=NULL){
             if(strcmp(folder->d_name, buffer)!=0 && strcmp(folder->d_name, buffer2)!=0){
             char *name = folder->d_name;
-            name +=5;
-            char  * broad_cast_msg = (char*)malloc(sizeof(char)*500);
-            strcat(broad_cast_msg, "Broadcast de ");
-            strcat(broad_cast_msg, from);
-            send_msg(broad_cast_msg, name, msg);
+            if(strstr(name, "chat")!=NULL){
+                name +=5;
+                char  * broad_cast_msg = (char*)malloc(sizeof(char)*500);
+                strcat(broad_cast_msg, "\nBroadcast de ");
+                strcat(broad_cast_msg, from);
+                send_msg(broad_cast_msg, name, msg);
+            }
             }
         }
     }
 }
 
+int check(char* from){
+    int i = 0;
+    
+    for(i = 0 ; i<count_; i++){
+        printf("%s", users[i].name);
+        if(strcmp(users[i].name, from)==0){
+            return 1;
+        }
+    }
+    return -1;
+}
+
 void * handler_msg(){
-   
 
     while(1){
         
-        char * chat_content = read_message();
-        char * list_ = "list\n";
-        char * exit_ = "sair\n";
-        if(strcmp(chat_content, list_)==0){
+        printf("Digite seu comando: ");
+        int command;
+        scanf("%d", &command);
+        if(command == 2){
             list();
-        } else if(strcmp(chat_content, exit_)==0){
+        }else if(command == 3){
             exit_command();
-        }else{
-            Msg * msg = get_attrs_msg(chat_content);
-            char * all = "all";
-            if(strcmp(msg->receive, all)==0){
-                broadcast(msg->sender, msg->content);
+        }else if(command == 1){
+            char * msg = (char*)malloc(sizeof(char)*500);
+            char * from = (char*)malloc(sizeof(char)*10);
+            char * by = (char*)malloc(sizeof(char)*10);
+            scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
+            if(strcmp(by, "all")==0){
+                broadcast(from, msg);
             }else{
-                send_msg(msg->sender, msg->receive, msg->content);
+                send_msg(from, by, msg);
+            }
+        }else if(command == 4 ){
+            char channel_name[20];
+            scanf("%s", channel_name);
+            create_channel(channel_name); 
+        }else if(command == 5){
+            char * msg = (char*)malloc(sizeof(char)*500);
+            char * from = (char*)malloc(sizeof(char)*20);
+            char * by = (char*)malloc(sizeof(char)*20);
+            scanf("%[^:]:%[^:]:%[^\n]", from, by, msg);
+            if(strstr(msg, "join")!=NULL){
+                send_msg_channel(from, msg);
+            }else if(strstr(msg, "leave")!=NULL){
+                send_msg_channel(from, "Saiu do canal!");
+            }else{
+                if(check(from) ==1){
+                    send_msg_channel(from, msg);
+                }else{
+                    send_msg_channel(from, "Nao pertence ao canal");
+                }
             }
         }
     }
@@ -110,7 +144,6 @@ void *receive_msg(){
             printf("mq_receive");
             exit(1);
         }
-
         printf("\t%s\n", msg_received);
     }
 }

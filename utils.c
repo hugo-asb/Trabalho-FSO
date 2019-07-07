@@ -56,8 +56,10 @@ void print_initial_menu(){
     printf("-------------------------------------------------------------------------\n");    
     printf("\t\tO chat foi iniciado.\n");
     printf("-------------------------------------------------------------------------\n");
-    printf("- Utilize o padrao DE:PARA:MENSAGEM para enviar uma mensagem para alguem.\n");
-    printf("- Use o camando \"list\" para ver as pessoas que estão online.\n");
-    printf("- Use o camando \"sair\" para encerrar o chat.\n");
+    printf("- Use o comando \"1\" para enviar uma mensagem para alguem.\n");
+    printf("- Use o camando \"2\" para ver as pessoas que estão online.\n");
+    printf("- Use o camando \"3\" para encerrar o chat.\n");
+    printf("- Use o camando \"4\" para criar uma sala\n");
+    printf("- Use o camando \"5\" para enviar msg a uma sala\n");
     printf("-------------------------------------------------------------------------\n\n");
 }

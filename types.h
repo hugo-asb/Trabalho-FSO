@@ -5,6 +5,10 @@ typedef struct{
     char * sender;
     char * receive;
     char * content;
-}Msg; 
+}Msg;
+
+typedef struct {
+    char * name;
+}User_channel;
 
 #endif

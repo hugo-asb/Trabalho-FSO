@@ -1,32 +1,19 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include "string_utils.h"
 #include "types.h"
 
-char * read_message(){
-    
-    char * content = (char*)malloc(sizeof(char)*522);
-    int i = 0;
-    char c;
-    do{
-       c = getchar();
-       content[i] = c;
-       i++;
-    }while(c!='\n');
-    return content;
-}
-
-char * find(char * content, int *pos){
-    int i = *pos;
+char * find(char * content, int  pos){
+    int i = pos;
     char c;
     int k = 0;
-    int j = *pos;
+    int j = pos;
     do{
         
-        c = content[*pos];
+        c = content[pos];
         i++;
-        *pos = i;
-
-    }while(c!=':' && c!='\n');
+        pos = i;
+    }while(c!=':');
     
     char * element =(char*)malloc(sizeof(char)*i-j);
     
@@ -37,7 +24,7 @@ char * find(char * content, int *pos){
     }
     return element;
 }
-
+/*
 Msg * get_attrs_msg(char * content){
     int pos = 0;
     Msg *msg = (Msg*)malloc(sizeof(Msg));
@@ -49,3 +36,4 @@ Msg * get_attrs_msg(char * content){
     msg->content = find(content, &pos);
     return msg;
 }
+*/
